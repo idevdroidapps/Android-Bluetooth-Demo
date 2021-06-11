@@ -1,41 +1,46 @@
 package com.campbell.demo.presentation.dependency_injection
 
+import android.app.Activity
+import android.bluetooth.BluetoothAdapter
+import android.content.IntentFilter
 import androidx.lifecycle.ViewModelProvider
 import com.campbell.demo.data.repositories.DataRepositoryImpl
-import com.campbell.demo.data.services.DataService
 import com.campbell.demo.domain.interfaces.DataRepository
 import com.campbell.demo.domain.usecases.UseCases
 import com.campbell.demo.presentation.factories.SharedViewModelFactory
+import com.campbell.demo.data.services.BtStateBroadcastReceiver
 
 object Injector {
 
     /**
-     * Provides Data Service
+     * Provides BluetoothState BroadcastReceiver
      */
-    private fun provideDataService(): DataService {
-        return DataService()
+    private fun provideBtStateReceiver(activity: Activity): BtStateBroadcastReceiver {
+        val receiver = BtStateBroadcastReceiver()
+        activity.registerReceiver(receiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
+        return receiver
     }
 
     /**
      * Provides a single source of truth ViewModels
      */
-    private fun provideDataRepository(): DataRepository {
+    private fun provideDataRepository(activity: Activity): DataRepository {
         return DataRepositoryImpl.getInstance(
-            provideDataService()
+            provideBtStateReceiver(activity)
         )
     }
 
     /**
      * Provides an instance of [UseCases]
      */
-    private fun provideUseCases(): UseCases {
-        return UseCases(provideDataRepository())
+    private fun provideUseCases(activity: Activity): UseCases {
+        return UseCases(provideDataRepository(activity))
     }
 
     /**
      * Provides the [ViewModelProvider.Factory]
      */
-    fun provideSharedViewModelFactory(): ViewModelProvider.Factory {
-        return SharedViewModelFactory(provideUseCases())
+    fun provideSharedViewModelFactory(activity: Activity): ViewModelProvider.Factory {
+        return SharedViewModelFactory(provideUseCases(activity))
     }
 }

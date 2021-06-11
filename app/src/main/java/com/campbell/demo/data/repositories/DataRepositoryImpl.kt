@@ -1,13 +1,16 @@
 package com.campbell.demo.data.repositories
 
-import com.campbell.demo.data.services.DataService
-import com.campbell.demo.domain.entities.Data
+import com.campbell.demo.data.services.BluetoothState
 import com.campbell.demo.domain.interfaces.DataRepository
+import com.campbell.demo.data.services.BtStateBroadcastReceiver
+import kotlinx.coroutines.flow.StateFlow
 
-class DataRepositoryImpl(private val dataService: DataService) : DataRepository {
+class DataRepositoryImpl(
+    private val bluetoothStateReceiver: BtStateBroadcastReceiver
+) : DataRepository {
 
-    override fun getData(): Data {
-        return dataService.getData()
+    override fun btAdapterState(): StateFlow<BluetoothState> {
+        return bluetoothStateReceiver.btStateFlow
     }
 
     companion object {
@@ -15,9 +18,9 @@ class DataRepositoryImpl(private val dataService: DataService) : DataRepository 
         @Volatile
         private var instance: DataRepositoryImpl? = null
 
-        fun getInstance(service: DataService) =
+        fun getInstance(receiver: BtStateBroadcastReceiver) =
             instance ?: synchronized(this) {
-                instance ?: DataRepositoryImpl(service).also { instance = it }
+                instance ?: DataRepositoryImpl(receiver).also { instance = it }
             }
     }
 }
