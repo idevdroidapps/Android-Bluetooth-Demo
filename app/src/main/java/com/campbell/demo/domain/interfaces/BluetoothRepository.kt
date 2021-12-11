@@ -3,6 +3,6 @@ package com.campbell.demo.domain.interfaces
 import com.campbell.demo.data.services.BluetoothState
 import kotlinx.coroutines.flow.StateFlow
 
-interface DataRepository {
+interface BluetoothRepository {
     fun btAdapterState(): StateFlow<BluetoothState>
 }

@@ -7,7 +7,7 @@ import android.content.Intent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class BtStateBroadcastReceiver : BroadcastReceiver() {
+class BluetoothStateBroadcastReceiver : BroadcastReceiver() {
 
     private var initState = when (BluetoothAdapter.getDefaultAdapter().state) {
         BluetoothAdapter.STATE_OFF -> BluetoothState.Off

@@ -1,5 +1,4 @@
-# Clean Android Template (CAT)
-Android Mobile App Template in a Clean Architecture as MVVM pattern.
+# Android Bluetooth Demo
 
 ## Built With
 * [Kotlin](https://kotlinlang.org/)
